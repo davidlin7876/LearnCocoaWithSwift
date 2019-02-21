@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
 
-  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  func applicationDidFinishLaunching(_ aNotification: Notification) {
     for window in NSApp.windows {
       if let contentView = window.contentView {
         window.visualizeConstraints(contentView.constraints)
@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
   }
 
-  func applicationWillTerminate(aNotification: NSNotification) {
+  func applicationWillTerminate(_ aNotification: Notification) {
     // Insert code here to tear down your application
   }
 

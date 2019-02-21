@@ -49,22 +49,22 @@ class MainWindowController: NSWindowController {
                               alpha: CGFloat(alpha))
   }
   
-  @IBAction func adjustRed(sender: NSSlider) {
+  @IBAction func adjustRed(_ sender: NSSlider) {
     red = sender.doubleValue
     updateColor()
   }
   
-  @IBAction func adjustGreen(sender: NSSlider) {
+  @IBAction func adjustGreen(_ sender: NSSlider) {
     green = sender.doubleValue
     updateColor()
   }
   
-  @IBAction func adjustBlue(sender: NSSlider) {
+  @IBAction func adjustBlue(_ sender: NSSlider) {
     blue = sender.doubleValue
     updateColor()
   }
   
-  @IBAction func adjustAlpha(sender: NSSlider) {
+  @IBAction func adjustAlpha(_ sender: NSSlider) {
     alpha = sender.doubleValue
     updateColor()
   }

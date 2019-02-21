@@ -44,35 +44,36 @@ class Document: NSDocument {
   
   // MARK: - Key Value Observing
   
-  func startObservingEmployee(employee: Employee) {
-    employee.addObserver(self, forKeyPath: "name", options: .Old, context: &KVOContext)
-    employee.addObserver(self, forKeyPath: "raise", options: .Old, context: &KVOContext)
+  func startObservingEmployee(_ employee: Employee) {
+    employee.addObserver(self, forKeyPath: "name", options: .old, context: &KVOContext)
+    employee.addObserver(self, forKeyPath: "raise", options: .old, context: &KVOContext)
   }
   
-  func stopObservingEmployee(employee: Employee) {
+  func stopObservingEmployee(_ employee: Employee) {
     employee.removeObserver(self, forKeyPath: "name", context: &KVOContext)
     employee.removeObserver(self, forKeyPath: "raise", context: &KVOContext)
   }
   
-  override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-      change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
     
     guard context == &KVOContext else {
       // If the context does not match, this message must be intended for our superclass.
-      super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+//      super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
       return
     }
     
-    if let keyPath = keyPath, object = object, change = change {
+        if let keyPath = keyPath, let object = object, let change = change {
       
-      var oldValue = change[NSKeyValueChangeOldKey]
+            var oldValue = change[NSKeyValueChangeKey.oldKey]
       if oldValue is NSNull {
         oldValue = nil
       }
       
       let undo = undoManager!
       // Note: here the target is object (i.e., the employee), but not self (the document)
-      undo.prepareWithInvocationTarget(object).setValue(oldValue, forKeyPath: keyPath)
+            (undo.prepare(withInvocationTarget: object) as? Employee)?.setValue(oldValue, forKeyPath: keyPath)
+//      undo.prepareWithInvocationTarget(object).setValue(oldValue, forKeyPath: keyPath)
     }
   }
   
@@ -85,24 +86,25 @@ class Document: NSDocument {
   //   and are then notified whenever its value changes.
   // Note: to be matched, the func and parameters names should be exactly as following.
   
-  func insertObject(employee: Employee, inEmployeesAtIndex index: Int) {
+  func insertObject(_ employee: Employee, inEmployeesAtIndex index: Int) {
     
     // Add inverse operation to undo stack
     let undo = undoManager!
-    undo.prepareWithInvocationTarget(self).removeObjectFromEmployeesAtIndex(employees.count)
-    if !undo.undoing {
+    (undo.prepare(withInvocationTarget: self) as? Document)?.removeObjectFromEmployeesAtIndex(employees.count)
+//    undo.prepareWithInvocationTarget(self).removeObjectFromEmployeesAtIndex(employees.count)
+    if !undo.isUndoing {
       undo.setActionName("Add Employee")
     }
     
     if index >= 0 && index <= employees.count {
-      employees.insert(employee, atIndex: index)
+        employees.insert(employee, at: index)
       
     } else {
       employees.append(employee)
     }
   }
   
-  func removeObjectFromEmployeesAtIndex(index: Int) {
+  func removeObjectFromEmployeesAtIndex(_ index: Int) {
     
     guard index >= 0 && index < employees.count else {
       return
@@ -112,12 +114,13 @@ class Document: NSDocument {
     
     // Add inverse operation to undo stack
     let undo = undoManager!
-    undo.prepareWithInvocationTarget(self).insertObject(employee, inEmployeesAtIndex: index)
-    if !undo.undoing {
+//    undo.prepareWithInvocationTarget(self).insertObject(employee, inEmployeesAtIndex: index)
+    (undo.prepare(withInvocationTarget: self) as? Document)?.insertObject(employee, inEmployeesAtIndex: index)
+    if !undo.isUndoing {
       undo.setActionName("Remove Employee")
     }
     
-    employees.removeAtIndex(index)
+    employees.remove(at: index)
   }
   
   // MARK: - Default
@@ -130,18 +133,12 @@ class Document: NSDocument {
     return "Document"
   }
 
-  override func dataOfType(typeName: String) throws -> NSData {
-    // Insert code here to write your document to data of the specified type. If outError != nil, ensure that you create and set an appropriate error when returning nil.
-    // You can also choose to override fileWrapperOfType:error:, writeToURL:ofType:error:, or writeToURL:ofType:forSaveOperation:originalContentsURL:error: instead.
-    throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-  }
-
-  override func readFromData(data: NSData, ofType typeName: String) throws {
-    // Insert code here to read your document from the given data of the specified type. If outError != nil, ensure that you create and set an appropriate error when returning false.
-    // You can also choose to override readFromFileWrapper:ofType:error: or readFromURL:ofType:error: instead.
-    // If you override either of these, you should also override -isEntireFileLoaded to return false if the contents are lazily loaded.
-    throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
-  }
+    override func data(ofType typeName: String) throws -> Data {
+        throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
+    }
+    override func read(from data: Data, ofType typeName: String) throws {
+        throw NSError(domain: NSOSStatusErrorDomain, code: unimpErr, userInfo: nil)
+    }
   
   // MARK: - NSWindowDelegate
   

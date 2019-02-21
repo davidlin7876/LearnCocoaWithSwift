@@ -13,15 +13,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var mainWindowController: MainWindowController?
     
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ notification: Notification) {
         let mainWindowController = MainWindowController()
         
-        mainWindowController.showWindow(self)
+        
         
         // Best practice in Swift:
         //   Create an object and complete its initial work 
         //     before saving the object to a property.
         self.mainWindowController = mainWindowController
+        
+        mainWindowController.showWindow(self)
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

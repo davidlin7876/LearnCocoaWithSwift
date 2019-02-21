@@ -20,15 +20,15 @@ class MainWindowController: NSWindowController {
     let attrString = NSMutableAttributedString(string: "Hello World!")
     
     attrString.addAttribute(NSFontAttributeName,
-                            value: NSFont.boldSystemFontOfSize(NSFont.systemFontSize()),
+                            value: NSFont.boldSystemFont(ofSize: NSFont.systemFontSize()),
                             range: NSRange(0...4))
     
     attrString.addAttribute(NSUnderlineStyleAttributeName,
-                            value: NSUnderlineStyle.StyleDouble.rawValue,
+                            value: NSUnderlineStyle.styleDouble.rawValue,
                             range: NSMakeRange(6, 5))
     
     attrString.addAttribute(NSForegroundColorAttributeName,
-                            value: NSColor.orangeColor(),
+                            value: NSColor.orange,
                             range: NSRange(11...11))
     
     button.attributedTitle = attrString

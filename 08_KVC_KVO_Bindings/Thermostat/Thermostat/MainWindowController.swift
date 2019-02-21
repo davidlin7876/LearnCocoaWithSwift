@@ -15,7 +15,7 @@ class MainWindowController: NSWindowController {
   var templature = 37
   
   private var privateIsOn = true
-  dynamic var isOn: Bool {
+  var isOn: Bool {
     get {
       return privateIsOn
     }
@@ -29,19 +29,19 @@ class MainWindowController: NSWindowController {
     return "MainWindowController"
   }
   
-  @IBAction func changeWarmer(sender: NSButton) {
+  @IBAction func changeWarmer(_ sender: NSButton) {
     
     // Solution 1: Use KVC(Key-value coding)
     setValue(templature + 1, forKey: "templature")
   }
   
-  @IBAction func changeCooler(sender: NSButton) {
+  @IBAction func changeCooler(_ sender: NSButton) {
     
     // Solution 2: Use KVO(Key-value observing)
-    willChangeValueForKey("templature")
+    willChangeValue(forKey: "templature")
     
     templature -= 1
     
-    didChangeValueForKey("templature")
+    didChangeValue(forKey: "templature")
   }
 }

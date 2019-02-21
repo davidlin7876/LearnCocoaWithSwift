@@ -44,19 +44,19 @@ class AddPersonWindowController: NSWindowController {
   
   // MARK: - Action
   
-  @IBAction func add(sender: NSButton) {
+  @IBAction func add(_ sender: NSButton) {
     // This is let binding value be updated.
-    window?.endEditingFor(nil)
+    window?.endEditing(for: nil)
     dismissWindowWithResponse(NSModalResponseOK)
   }
   
-  @IBAction func cancel(sender: NSButton) {
+  @IBAction func cancel(_ sender: NSButton) {
     dismissWindowWithResponse(NSModalResponseCancel)
   }
   
   // MARK: - Helper
   
-  func dismissWindowWithResponse(response: NSModalResponse) {
+  func dismissWindowWithResponse(_ response: NSModalResponse) {
     if let window = window {
       window.sheetParent?.endSheet(window, returnCode: response)
     }

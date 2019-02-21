@@ -15,13 +15,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   
   // MARK: - lifecycle
   
-  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  func applicationDidFinishLaunching(_ aNotification: Notification) {
     addWindowController()
   }
   
   // MARK: - Actions
   
-  @IBAction func addNewChatWindows(sender: NSObject) {
+  @IBAction func addNewChatWindows(_ sender: NSObject) {
     addWindowController()
   }
   

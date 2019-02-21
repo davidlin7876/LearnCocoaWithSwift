@@ -10,7 +10,7 @@ import Cocoa
 
 class ChatWindowController: NSWindowController {
 
-  private let notificationCenter = NSNotificationCenter.defaultCenter()
+    private let notificationCenter = NotificationCenter.default
   
   let ChatMessageNotificationDidSent = "com.atjason.swift.cocoa.chatter.ChatMessageNotificationDidSent"
   let ChatMessageNotificationNameKey = "Name"
@@ -41,7 +41,7 @@ class ChatWindowController: NSWindowController {
 
     // TODO: double check for selector
     notificationCenter.addObserver(self, selector: #selector(ChatWindowController.receiveMessage),
-                                   name: ChatMessageNotificationDidSent, object: nil)
+                                   name: NSNotification.Name(rawValue: ChatMessageNotificationDidSent), object: nil)
   }
   
   deinit {
@@ -50,7 +50,7 @@ class ChatWindowController: NSWindowController {
   
   // MARK: - Functions
   
-  func receiveMessage(notification: NSNotification) {
+  func receiveMessage(_ notification: NSNotification) {
     if let dict = notification.userInfo as? [String: String] {
       if let message = dict[ChatMessageNotificationMessageKey] {
         if let name = dict[ChatMessageNotificationNameKey] {
@@ -58,13 +58,13 @@ class ChatWindowController: NSWindowController {
           let mutableMessageHistory = messageHistory.mutableCopy()
           
           if messageHistory.length > 0 {
-            mutableMessageHistory.appendAttributedString(NSAttributedString(string: "\n"))
+            (mutableMessageHistory as AnyObject).append(NSAttributedString(string: "\n"))
           }
           
           let messageLine = "\(name): \(message)"
-          mutableMessageHistory.appendAttributedString(NSAttributedString(string: messageLine))
+            (mutableMessageHistory as AnyObject).append(NSAttributedString(string: messageLine))
           
-          messageHistory = mutableMessageHistory.mutableCopy() as! NSAttributedString
+            messageHistory = (mutableMessageHistory as AnyObject).mutableCopy() as! NSAttributedString
           
           messageView.scrollToEndOfDocument(self)
         }
@@ -74,9 +74,9 @@ class ChatWindowController: NSWindowController {
   
   // MARK: - Actions
   
-  @IBAction func sendMessage(sender: NSButton) {
+  @IBAction func sendMessage(_ sender: NSButton) {
     
-    sender.window?.endEditingFor(nil)
+    sender.window?.endEditing(for: nil)
     
     if !message.isEmpty {
       let realName = name.isEmpty ? "Ghost" : name
@@ -85,8 +85,7 @@ class ChatWindowController: NSWindowController {
         ChatMessageNotificationNameKey: realName,
         ChatMessageNotificationMessageKey: message
       ]
-      
-      notificationCenter.postNotificationName(ChatMessageNotificationDidSent,
+        notificationCenter.post(name: NSNotification.Name(rawValue: ChatMessageNotificationDidSent),
                                               object: self, userInfo: userInfo)
       
       message = ""

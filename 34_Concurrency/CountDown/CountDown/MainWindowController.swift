@@ -13,8 +13,9 @@ class MainWindowController: NSWindowController {
   dynamic var numString = "5"
   dynamic var isCountingDown = false
   
-  private var countDownQueue = NSOperationQueue()
-  private var countDownOperation: NSBlockOperation?
+    private var countDownQueue = OperationQueue()
+    private var countDownOperation: BlockOperation?
+    var isCanceled = false
   
   override var windowNibName: String? {
     return "MainWindowController"
@@ -22,15 +23,15 @@ class MainWindowController: NSWindowController {
   
   // MARK: - Action
   
-  @IBAction func start(sender: NSButton!) {
+  @IBAction func start(_ sender: NSButton!) {
     window?.makeFirstResponder(nil)
-    if let num = Int(numString) where num > 0 {
-      startCountDown(num)
+    if let num = Int(numString), num > 0 {
+        startCountDown(num: num)
       isCountingDown = true
     }
   }
   
-  @IBAction func stop(sender: NSButton!) {
+  @IBAction func stop(_ sender: NSButton!) {
     stopCountDown()
     isCountingDown = false
   }
@@ -40,31 +41,54 @@ class MainWindowController: NSWindowController {
   func startCountDown(num: Int) {
     var num = num
     
-    countDownOperation = NSBlockOperation(block: { 
-      while num > 0 {
-        sleep(1)
+    isCanceled = false
+    DispatchQueue.global().async {
+        [unowned self] in
+        while num > 0 {
+            sleep(1)
+            if self.isCanceled {
+                break;
+            }
+            num -= 1
+            DispatchQueue.main.async {
+                self.numString = "\(num)"
+            }
 
-        if self.countDownOperation!.cancelled {
-          break
+            self.numString = "\(num)"
         }
-
-        num -= 1
-        NSOperationQueue.mainQueue().addOperationWithBlock({
-          self.numString = "\(num)"
-        })
-      }
-
-      if num == 0 {
-        NSOperationQueue.mainQueue().addOperationWithBlock({
-          self.isCountingDown = false
-        })
-      }
-    })
-    
-    countDownQueue.addOperation(countDownOperation!)
+        
+        if num == 0 {
+            DispatchQueue.main.async {
+                self.isCountingDown = false
+            }
+        }
+    }
+//    countDownOperation = BlockOperation(block: {
+//      while num > 0 {
+//        sleep(1)
+//
+//        if self.countDownOperation!.isCancelled {
+//          break
+//        }
+//
+//        num -= 1
+//        OperationQueue.main.addOperation({
+//          self.numString = "\(num)"
+//        })
+//      }
+//
+//      if num == 0 {
+//        OperationQueue.main.addOperation({
+//          self.isCountingDown = false
+//        })
+//      }
+//    })
+//
+//    countDownQueue.addOperation(countDownOperation!)
   }
   
   func stopCountDown() {
-    countDownQueue.cancelAllOperations()
+    isCanceled = true
+//    countDownQueue.cancelAllOperations()
   }
 }

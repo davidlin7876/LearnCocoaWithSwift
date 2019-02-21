@@ -25,12 +25,12 @@ class MainWindowController: NSWindowController,
   
   func updateButtonStatus() {
     if isSpeaking {
-      speakButton.enabled = false
-      stopButton.enabled = true
+        speakButton.isEnabled = false
+        stopButton.isEnabled = true
       
     } else {
-      speakButton.enabled = true
-      stopButton.enabled = false
+        speakButton.isEnabled = true
+        stopButton.isEnabled = false
     }
   }
   
@@ -48,30 +48,30 @@ class MainWindowController: NSWindowController,
   
   // MARK: - Action
   
-  @IBAction func speak(sender: NSButton) {
+  @IBAction func speak(_ sender: NSButton) {
     let stringToBeSpoken = textField.stringValue
     
     if !stringToBeSpoken.isEmpty {
-      speaker.startSpeakingString(stringToBeSpoken)
+        speaker.startSpeaking(stringToBeSpoken)
       
       isSpeaking = true
     }
   }
   
-  @IBAction func stop(sender: NSButton) {
+  @IBAction func stop(_ sender: NSButton) {
     speaker.stopSpeaking()
   }
   
   // MARK: - NSSpeechSynthesizerDelegate
   
-  func speechSynthesizer(sender: NSSpeechSynthesizer,
+  func speechSynthesizer(_ sender: NSSpeechSynthesizer,
                          didFinishSpeaking finishedSpeaking: Bool) {
     isSpeaking = false
   }
   
   // MARK: - NSWindowDelegate
   
-  func windowShouldClose(sender: AnyObject) -> Bool {
-    return !isSpeaking
+    private func windowShouldClose(_ sender: AnyObject) -> Bool {
+        return !isSpeaking
   }
 }

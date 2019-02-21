@@ -25,6 +25,6 @@ class MainSplitViewController: NSSplitViewController, LeftViewControllerDelegate
   // MARK: - LeftViewControllerDelegate
   
   func leftViewContentChanged(viewController: LeftViewController?, content: String) {
-    rightViewController.setViewContent(content)
+    rightViewController.setViewContent(content: content)
   }
 }

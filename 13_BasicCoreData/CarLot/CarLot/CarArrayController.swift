@@ -9,13 +9,12 @@
 import Cocoa
 
 class CarArrayController: NSArrayController {
-  override func newObject() -> AnyObject {
-    let object = super.newObject()
-    
-    object.setValue("Car's name", forKey: "makeModel")
-    object.setValue(NSDate(), forKey: "datePurchased")
-    object.setValue(2, forKey: "condition")
-    
-    return object
-  }
+    override func newObject() -> Any {
+        let object = super.newObject()
+        (object as AnyObject).setValue("Car's name", forKey: "makeModel")
+        (object as AnyObject).setValue(NSDate(), forKey: "datePurchased")
+        (object as AnyObject).setValue(2, forKey: "condition")
+        return object
+    }
 }
+

@@ -18,8 +18,8 @@ class MainWindowController: NSWindowController, NSWindowDelegate,
   
   let voices = NSSpeechSynthesizer.availableVoices()
   
-  func getVoiceNameBy(identifier: String) -> String? {
-    let attributes = NSSpeechSynthesizer.attributesForVoice(identifier)
+  func getVoiceNameBy(_ identifier: String) -> String? {
+    let attributes = NSSpeechSynthesizer.attributes(forVoice: identifier)
     
     return attributes[NSVoiceName] as? String
   }
@@ -27,43 +27,38 @@ class MainWindowController: NSWindowController, NSWindowDelegate,
   override var windowNibName: String? {
     return "MainWindowController"
   }
-  
-  // MARK: - NSWindowDelegate
+    
+// MARK: - NSWindowDelegate
   
   override func windowDidLoad() {
     let defaultVoice = NSSpeechSynthesizer.defaultVoice()
-    
-    if let index = voices.indexOf(defaultVoice) {
-      voiceTableView.selectRowIndexes(NSIndexSet(index: index),
+        if let index = voices.firstIndex(of: defaultVoice){
+        voiceTableView.selectRowIndexes(NSIndexSet(index: index) as IndexSet,
                                       byExtendingSelection: false)
       voiceTableView.scrollRowToVisible(index)
     }
   }
   
   // MARK: - NSTableViewDataSource
-  
-  func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+  func numberOfRows(in tableView: NSTableView) -> Int {
     return voices.count
   }
   
-  func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-    
+  func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
     if row >= 0 && row < voices.count {
-      return getVoiceNameBy(voices[row])
+        return getVoiceNameBy(voices[row]) as AnyObject
     }
-    
+
     return nil
-  }
+    }
   
   // MARK: - NSTableViewDelegate
-  
-  func tableViewSelectionDidChange(notification: NSNotification) {
-    let index = voiceTableView.selectedRow
-    
-    if index >= 0 && index < voices.count {
-      voiceLabel.stringValue = getVoiceNameBy(voices[index]) ?? emptyVoiceLabelName
-    } else {
-      voiceLabel.stringValue = emptyVoiceLabelName
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        let index = voiceTableView.selectedRow
+        if index >= 0 && index < voices.count {
+          voiceLabel.stringValue = getVoiceNameBy(voices[index]) ?? emptyVoiceLabelName
+        } else {
+          voiceLabel.stringValue = emptyVoiceLabelName
+        }
     }
-  }
 }

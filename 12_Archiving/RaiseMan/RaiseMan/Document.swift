@@ -130,12 +130,12 @@ class Document: NSDocument {
     return "Document"
   }
 
-  override func dataOfType(typeName: String) throws -> NSData {
-    return NSKeyedArchiver.archivedDataWithRootObject(employees)
+    override func data(ofType typeName: String) throws -> Data {
+        return NSKeyedArchiver.archivedData(withRootObject: employees)
   }
 
-  override func readFromData(data: NSData, ofType typeName: String) throws {
-    if let employeeArray = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Employee] {
+    override func read(from data: Data, ofType typeName: String) throws {
+        if let employeeArray = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Employee] {
       employees = employeeArray
     }
   }

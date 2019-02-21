@@ -31,18 +31,18 @@ class MainWindowController: NSWindowController,
   
   func updateButtonStatus() {
     if isSpeaking {
-      speakButton.enabled = false
-      stopButton.enabled = true
+        speakButton.isEnabled = false
+        stopButton.isEnabled = true
       
     } else {
-      speakButton.enabled = true
-      stopButton.enabled = false
+        speakButton.isEnabled = true
+        stopButton.isEnabled = false
     }
   }
   
   func getVoiceNameBy(idendifier: String) -> String? {
     
-    let attritutes = NSSpeechSynthesizer.attributesForVoice(idendifier)
+    let attritutes = NSSpeechSynthesizer.attributes(forVoice: idendifier)
     
     return attritutes[NSVoiceName] as? String
   }
@@ -58,8 +58,9 @@ class MainWindowController: NSWindowController,
     let voice = preferenceManager.speakVoice ??
       preferenceManager.defaultSpeakVoice
     
-    if let index = voices.indexOf(voice) {
-      tableView.selectRowIndexes(NSIndexSet(index: index),
+//    if let index = voices.indexOf(voice) {
+    if let index = voices.firstIndex(of: voice){
+      tableView.selectRowIndexes(NSIndexSet(index: index) as IndexSet,
                                  byExtendingSelection: false)
       tableView.scrollRowToVisible(index)
     }
@@ -77,21 +78,21 @@ class MainWindowController: NSWindowController,
   
   // MARK: - Action
   
-  @IBAction func speak(sender: NSButton) {
+  @IBAction func speak(_ sender: NSButton) {
     let stringToBeSpoken = textField.stringValue
     
     if !stringToBeSpoken.isEmpty {
-      speaker.startSpeakingString(stringToBeSpoken)
+        speaker.startSpeaking(stringToBeSpoken)
       
       isSpeaking = true
     }
   }
   
-  @IBAction func stop(sender: NSButton) {
+  @IBAction func stop(_ sender: NSButton) {
     speaker.stopSpeaking()
   }
   
-  @IBAction func reset(sender: NSButton) {
+  @IBAction func reset(_ sender: NSButton) {
     preferenceManager.resetFactoryDefaults()
     
     loadSpeakTextAndVoice()
@@ -99,7 +100,7 @@ class MainWindowController: NSWindowController,
   
   // MARK: - NSSpeechSynthesizerDelegate
   
-  func speechSynthesizer(sender: NSSpeechSynthesizer,
+  func speechSynthesizer(_ sender: NSSpeechSynthesizer,
                          didFinishSpeaking finishedSpeaking: Bool) {
     isSpeaking = false
   }
@@ -109,8 +110,7 @@ class MainWindowController: NSWindowController,
   func windowShouldClose(sender: AnyObject) -> Bool {
     return !isSpeaking
   }
-  
-  func windowWillClose(notification: NSNotification) {
+func windowWillClose(_ notification: Notification) {
     preferenceManager.speakText = textField.stringValue
     
     let row = tableView.selectedRow
@@ -125,25 +125,20 @@ class MainWindowController: NSWindowController,
   }
   
   // MARK: - NSTableViewDataSource
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return voices.count
+    }
   
-  func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-    return voices.count
-  }
-  
-  func tableView(tableView: NSTableView,
-                 objectValueForTableColumn tableColumn: NSTableColumn?,
-                 row: Int) -> AnyObject? {
-    
+func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
     if row >= 0 && row < voices.count {
-      return getVoiceNameBy(voices[row])
+        return getVoiceNameBy(idendifier: voices[row]) as AnyObject
     }
     
     return nil
   }
   
   // MARK: - NSTableViewDelegate
-  
-  func tableViewSelectionDidChange(notification: NSNotification) {
+func tableViewSelectionDidChange(_ notification: Notification) {
     let index = tableView.selectedRow
     
     if index == -1 {

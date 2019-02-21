@@ -19,7 +19,7 @@ class ViewController: NSViewController {
     setLabelStrings()
   }
 
-  override var representedObject: AnyObject? {
+    override var representedObject: Any? {
     didSet {
     // Update the view, if already loaded.)
     }
@@ -28,10 +28,10 @@ class ViewController: NSViewController {
   // MARK: - Helper
   
   func setLabelStrings() {
-    let dateFormatter = NSDateFormatter()
-    dateFormatter.dateStyle = .NoStyle
-    dateFormatter.timeStyle = .ShortStyle
-    let dateString = dateFormatter.stringFromDate(NSDate())
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .none
+    dateFormatter.timeStyle = .short
+    let dateString = dateFormatter.string(from: NSDate() as Date)
     
     question = NSLocalizedString("Q: What's the time now?", comment: "Question")
     answer = String(format: NSLocalizedString("A: It's %@.", comment: "Answer"), dateString)

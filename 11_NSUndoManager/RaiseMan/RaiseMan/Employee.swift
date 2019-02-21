@@ -19,15 +19,13 @@ class Employee: NSObject {
     self.raise = raise
   }
   
-  override func validateValue(ioValue: AutoreleasingUnsafeMutablePointer<AnyObject?>,
-                              forKey inKey: String) throws {
-    
-    if inKey == "raise" && ioValue.memory == nil {
-      let domain = "UserInputValidationErrorDomain"
-      let code = 0
-      let userInfo = [NSLocalizedDescriptionKey: "An employee's raise must be a number.",
-                      NSLocalizedRecoverySuggestionErrorKey: "Please provide a valid value."]
-      throw NSError(domain: domain, code: code, userInfo: userInfo)
+    override func validateValue(_ ioValue: AutoreleasingUnsafeMutablePointer<AnyObject?>, forKey inKey: String) throws {
+        if inKey == "raise" /*&& ioValue.memory == nil*/ {
+            let domain = "UserInputValidationErrorDomain"
+            let code = 0
+            let userInfo = [NSLocalizedDescriptionKey: "An employee's raise must be a number.",
+                            NSLocalizedRecoverySuggestionErrorKey: "Please provide a valid value."]
+            throw NSError(domain: domain, code: code, userInfo: userInfo)
+        }
     }
-  }
 }

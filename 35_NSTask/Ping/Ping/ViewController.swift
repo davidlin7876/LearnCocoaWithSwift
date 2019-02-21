@@ -15,10 +15,10 @@ class ViewController: NSViewController {
   @IBOutlet weak var pingButton: NSButton!
   @IBOutlet var textView: NSTextView!
   
-  let notificationCenter = NSNotificationCenter.defaultCenter()
+    let notificationCenter = NotificationCenter.default
   
-  var task: NSTask?
-  var fileHandle: NSFileHandle?
+    var task: Process?
+    var fileHandle: FileHandle?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -32,24 +32,24 @@ class ViewController: NSViewController {
 
   // MARK: - Action
   
-  @IBAction func ping(sender: NSButton) {
+  @IBAction func ping(_ sender: NSButton) {
     
     if sender.state == NSOnState {
-      task = NSTask()
+        task = Process()
       task?.launchPath = "/sbin/ping"
       task?.arguments = ["-c4", domain]
       
-      let pipe = NSPipe()
+        let pipe = Pipe()
       task?.standardOutput = pipe
       fileHandle = pipe.fileHandleForReading
       
       notificationCenter.removeObserver(self)
       notificationCenter.addObserver(self,
         selector: #selector(ViewController.receiveDataReadyNotification(_:)),
-        name: NSFileHandleReadCompletionNotification, object: fileHandle)
+        name: FileHandle.readCompletionNotification, object: fileHandle)
       notificationCenter.addObserver(self,
         selector: #selector(ViewController.receiveTerminateNotification(_:)),
-        name: NSTaskDidTerminateNotification, object: task)
+        name: Process.didTerminateNotification, object: task)
       
       task?.launch()
       
@@ -66,10 +66,10 @@ class ViewController: NSViewController {
   
   // MARK: - Notification
   
-  func receiveDataReadyNotification(notification: NSNotification) {
+  func receiveDataReadyNotification(_ notification: NSNotification) {
     if let data = notification.userInfo?[NSFileHandleNotificationDataItem] as? NSData {
-      if let string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
-        appendString(string)
+        if let string = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue) as String? {
+            appendString(string: string)
       }
     }
     
@@ -77,7 +77,7 @@ class ViewController: NSViewController {
     fileHandle?.readInBackgroundAndNotify()
   }
   
-  func receiveTerminateNotification(notification: NSNotification) {
+  func receiveTerminateNotification(_ notification: NSNotification) {
     task = nil
     fileHandle = nil
     
@@ -92,7 +92,7 @@ class ViewController: NSViewController {
   
   func appendString(string: String) {
     if let textStorage = textView.textStorage {
-      textStorage.replaceCharactersInRange(NSRange(location: textStorage.length, length: 0), withString: string)
+        textStorage.replaceCharacters(in: NSRange(location: textStorage.length, length: 0), with: string)
     }
   }
 }

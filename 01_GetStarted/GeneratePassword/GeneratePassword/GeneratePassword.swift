@@ -10,15 +10,16 @@ import Foundation
 
 private let characters = ("0123456789"
     + "abcdefghijklmnopqrstuvwxyz"
-    + "ABCDEFGHIJKLMNOPQRSTUVWXYZ").characters
+    + "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 private func generateRandomCharacter() -> Character {
     let index = Int(arc4random_uniform(UInt32(characters.count)))
     
-    return characters[characters.startIndex.advancedBy(index)]
+//    return characters[characters.startIndex.advancedBy(index)]
+    return characters[characters.index(characters.startIndex, offsetBy: index)]
 }
 
-func generateRandomString(length: Int) -> String {
+func generateRandomString(_ length: Int) -> String {
     var password = ""
     
     for _ in 0..<length {

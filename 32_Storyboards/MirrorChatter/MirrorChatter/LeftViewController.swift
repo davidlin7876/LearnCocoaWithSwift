@@ -23,9 +23,9 @@ class LeftViewController: NSViewController, NSTextFieldDelegate {
   }
   
   // MARK: - NSTextFieldDelegate
-  override func controlTextDidChange(obj: NSNotification) {
+    override func controlTextDidChange(_ obj: Notification) {
     // FIXME: why content didn't change at this time?
-    delegate?.leftViewContentChanged(self, content: textField.stringValue)
+    delegate?.leftViewContentChanged(viewController: self, content: textField.stringValue)
   }
 }
 

@@ -10,22 +10,22 @@ import Cocoa
 
 class DiceView: NSView {
   
-  var intValue: Int? = 3 {
+  var intValue: Int? = 6 {
     didSet {
       needsDisplay = true
     }
   }
   
-  override func drawRect(dirtyRect: NSRect) {
-    NSColor.lightGrayColor().set()
-    NSBezierPath.fillRect(bounds)
+  override func draw(_ dirtyRect: NSRect) {
+        NSColor.lightGray.set()
+        NSBezierPath.fill(bounds)
     
-    drawDieWithSize(bounds.size)
+        drawDieWithSize(size: bounds.size)
   }
   
   func drawDieWithSize(size: NSSize) {
     if let intValue = intValue {
-      let (edgeLength, dieFrame) = metricsForSize(size)
+        let (edgeLength, dieFrame) = metricsForSize(size: size)
       
       // Rounded border
       NSGraphicsContext.saveGraphicsState()
@@ -36,7 +36,7 @@ class DiceView: NSView {
       shadow.set()
       
       let cornerRadius = edgeLength / 5.0
-      NSColor.whiteColor().set()
+        NSColor.white.set()
       NSBezierPath(roundedRect: dieFrame, xRadius: cornerRadius, yRadius: cornerRadius).fill()
       
       NSGraphicsContext.restoreGraphicsState()
@@ -46,28 +46,28 @@ class DiceView: NSView {
       let dotRadius = edgeLength / 12.0
       let dotFrame = dieFrame.insetBy(dx: dotRadius * 2.5, dy: dotRadius * 2.5)
       
-      NSColor.blackColor().set()
+        NSColor.black.set()
       
       // Nested function to make drawing dots cleaner.
-      func drawDot(u: CGFloat, _ v: CGFloat) {
+      func drawDot(_ u: CGFloat, _ v: CGFloat) {
         let dotOrigin = NSPoint(x: dotFrame.minX + u * dotFrame.width,
                                 y: dotFrame.minY + v * dotFrame.height)
         let dotRect = NSRect(origin: dotOrigin, size: NSSize(width: 0, height: 0))
           .insetBy(dx: -dotRadius, dy: -dotRadius)
-        NSBezierPath(ovalInRect: dotRect).fill()
+        NSBezierPath(ovalIn: dotRect).fill()
       }
       
       // If intValue is in range...
-      if (1...6).indexOf(intValue) != nil {
+      if (1...6).firstIndex(of: intValue) != nil {
         // Draw the dots:
-        if [1, 3, 5].indexOf(intValue) != nil {
+        if [1, 3, 5].firstIndex(of: intValue) != nil {
           drawDot(0.5, 0.5) // Center dot
         }
-        if (2...6).indexOf(intValue) != nil {
+        if (2...6).firstIndex(of: intValue) != nil {
           drawDot(0, 1) // Upper left
           drawDot(1, 0) // Lower right
         }
-        if (4...6).indexOf(intValue) != nil {
+        if (4...6).firstIndex(of: intValue) != nil {
           drawDot(1, 1) // Upper right
           drawDot(0, 0) // Lower left
         }

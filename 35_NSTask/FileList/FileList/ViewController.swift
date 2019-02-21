@@ -14,16 +14,16 @@ class ViewController: NSViewController {
   
   // MARK: - Action
   
-  @IBAction func openFolder(sender: NSButton) {
-    let defaultFolderURL: NSURL
+  @IBAction func openFolder(_ sender: NSButton) {
+    let defaultFolderURL: URL
     do {
-      defaultFolderURL = try NSFileManager.defaultManager().URLForDirectory(
-        NSSearchPathDirectory.DownloadsDirectory,
-        inDomain: NSSearchPathDomainMask.UserDomainMask,
-        appropriateForURL: nil, create: false)
+        defaultFolderURL = try FileManager.default.url(
+            for: FileManager.SearchPathDirectory.downloadsDirectory,
+            in: FileManager.SearchPathDomainMask.userDomainMask,
+            appropriateFor: nil, create: false)
       
     } catch {
-      defaultFolderURL = NSURL(fileURLWithPath: "~/Downloads")
+      defaultFolderURL = URL(fileURLWithPath: "~/Downloads")
     }
     
     let openPanel = NSOpenPanel()
@@ -32,13 +32,12 @@ class ViewController: NSViewController {
     openPanel.canChooseFiles = false
     openPanel.prompt = "Open"
     
-    let selection = openPanel.runModal()
-    
-    if selection == NSFileHandlingPanelOKButton {
-      if let path = openPanel.URL?.path {
-        if let content = getFileListOf(path) {
+    let selection:NSApplication.ModalResponse = openPanel.runModal()
+    if  selection == NSModalResponseOK {
+        if let path = openPanel.url?.path {
+            if let content = getFileListOf(path: path) {
           if let textStorage = textView.textStorage {
-            textStorage.replaceCharactersInRange(NSRange(0..<textStorage.length), withString: content)
+            textStorage.replaceCharacters(in: NSRange(0..<textStorage.length), with: content)
           }
         }
       }
@@ -48,11 +47,11 @@ class ViewController: NSViewController {
   // MARK: - Helper
   
   func getFileListOf(path: String) -> String? {
-    let task = NSTask()
+    let task = Process()
     task.launchPath = "/bin/ls"
     task.arguments = ["-l", path]
     
-    let pipe = NSPipe()
+    let pipe = Pipe()
     task.standardOutput = pipe
     
     task.launch()
@@ -66,7 +65,7 @@ class ViewController: NSViewController {
       return nil
     }
     
-    return NSString(data: data, encoding: NSUTF8StringEncoding) as? String
+    return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
   }
 }
 

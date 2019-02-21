@@ -29,6 +29,6 @@ class Document: NSPersistentDocument {
   
   @IBAction func editCar(sender: NSButton) {
     let row = tableView.selectedRow
-    tableView.editColumn(0, row: row, withEvent: nil, select: true)
+    tableView.editColumn(0, row: row, with: nil, select: true)
   }
 }

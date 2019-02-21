@@ -25,31 +25,29 @@ class MainWindowController: NSWindowController {
   override func windowDidLoad() {
     super.windowDidLoad()
     
-    courseView.hidden = true
+    courseView.isHidden = true
     waitingIndicator.startAnimation(self)
     
     fetcher.fetchCourses { (fetchCourseResult) in
       switch fetchCourseResult {
       case .Succeed(let courses):
         self.courses = courses
-        
       case .Failed(let error):
         self.courses = []
-        
         print("Get error: \(error)")
       }
-      
-      self.courseView.hidden = false
+      self.courseView.isHidden = false
       self.waitingIndicator.stopAnimation(self)
+      self.waitingIndicator.isHidden = true
     }
     
     tableView.target = self
     tableView.doubleAction = #selector(MainWindowController.openCourse(_:))
   }
   
-  func openCourse(sender: AnyObject!) {
+  func openCourse(_ sender: AnyObject!) {
     if let course = arrayController.selectedObjects.first as? Course {
-      NSWorkspace.sharedWorkspace().openURL(course.url)
+        NSWorkspace.shared().open(course.url as URL)
     }
   }
 }

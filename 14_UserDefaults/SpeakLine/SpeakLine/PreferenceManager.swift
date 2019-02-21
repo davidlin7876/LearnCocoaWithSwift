@@ -9,7 +9,7 @@
 import Cocoa
 
 class PreferenceManager {
-  let userDefaults = NSUserDefaults.standardUserDefaults()
+    let userDefaults = UserDefaults.standard
   
   private let speakTextKey = "Speak Text"
   private let speakVoiceKey = "Speak Voice"
@@ -19,21 +19,22 @@ class PreferenceManager {
   
   var speakText: String {
     get {
-      return (userDefaults.objectForKey(speakTextKey) as? String) ?? defaultSpeakText
+        return (userDefaults.object(forKey: speakTextKey) as? String) ?? defaultSpeakText
     }
     
     set {
-      userDefaults.setObject(newValue, forKey: speakTextKey)
+        userDefaults.set(newValue, forKey: speakTextKey)
     }
   }
   
   var speakVoice: String {
     get {
-      return (userDefaults.objectForKey(speakVoiceKey) as? String) ?? defaultSpeakVoice
+//        return (userDefaults.object(forKey: speakTextKey) as? String) ?? defaultSpeakTextspeakVoiceKey) as? String) ?? defaultSpeakVoice
+        return userDefaults.object(forKey: speakTextKey) as! String
     }
     
     set {
-      userDefaults.setObject(newValue, forKey: speakVoiceKey)
+        userDefaults.set(newValue, forKey: speakVoiceKey)
     }
   }
   
@@ -47,12 +48,12 @@ class PreferenceManager {
       speakVoiceKey: defaultSpeakVoice
     ]
     
-    userDefaults.registerDefaults(factoryDefaults)
+    userDefaults.register(defaults: factoryDefaults)
   }
   
   func resetFactoryDefaults() {
-    userDefaults.removeObjectForKey(speakTextKey)
-    userDefaults.removeObjectForKey(speakVoiceKey)
+    userDefaults.removeObject(forKey: speakTextKey)
+    userDefaults.removeObject(forKey: speakVoiceKey)
   }
   
   func synchronize() {

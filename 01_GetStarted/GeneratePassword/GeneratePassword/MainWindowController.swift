@@ -20,7 +20,7 @@ class MainWindowController: NSWindowController {
         super.windowDidLoad()        
     }
     
-    @IBAction func generatePassword(sender: AnyObject?) {
+    @IBAction func generatePassword(_ sender: AnyObject?) {
         let passwordLength = 8
         
         let password = generateRandomString(passwordLength)

@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
   var window: NSWindow?
   
-  func applicationDidFinishLaunching(aNotification: NSNotification) {
+  func applicationDidFinishLaunching(_ aNotification: Notification) {
     
     let imageViewControllerA = ImageViewController()
     imageViewControllerA.title = "Flow"
@@ -26,11 +26,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     //   However, you can override loadView() to create the view programmatically.
     
     // So, another way is to directly set the image, and then bind this image to imageView's value (i.e., image)
-    imageViewControllerA.image = NSImage(imageLiteral: NSImageNameFlowViewTemplate)
+    imageViewControllerA.image = NSImage(imageLiteralResourceName: NSImageNameFlowViewTemplate)
     
     let imageViewControllerB = ImageViewController()
     imageViewControllerB.title = "Column"
-    imageViewControllerB.image = NSImage(imageLiteral: NSImageNameColumnViewTemplate)
+    imageViewControllerB.image = NSImage(imageLiteralResourceName: NSImageNameColumnViewTemplate)
     
     let tabViewController = NSTabViewController()
     tabViewController.addChildViewController(imageViewControllerA)

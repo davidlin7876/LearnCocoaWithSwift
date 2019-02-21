@@ -21,7 +21,7 @@ class MainWindowController: NSWindowController {
   
   private let keyPathArray = ["green", "blue", "alpha"]
   
-  dynamic var color = NSColor.blackColor()
+  dynamic var color = NSColor.black
   
   override var windowNibName: String? {
     return "MainWindowController"
@@ -39,21 +39,17 @@ class MainWindowController: NSWindowController {
     
     for keyPath in keyPathArray {
       addObserver(self, forKeyPath: keyPath,
-                  options: NSKeyValueObservingOptions.Old, context: nil)
+                  options: NSKeyValueObservingOptions.old, context: nil)
     }
   }
-  
-  override func observeValueForKeyPath(keyPath: String?,
-      ofObject object: AnyObject?,
-      change: [String : AnyObject]?,
-      context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let path = keyPath {
+            if keyPathArray.contains(path) {
+                updateColor()
+            }
+        }
+    }
     
-    if let path = keyPath {
-      if keyPathArray.contains(path) {
-        updateColor()
-      }
-    }
-  }
   
   func updateColor() {
     color = NSColor(calibratedRed: CGFloat(red),

@@ -46,12 +46,12 @@ class Document: NSDocument {
   
   // MARK: - Key Value Observing
   
-  func startObservingEmployee(employee: Employee) {
+  func startObservingEmployee(_ employee: Employee) {
     employee.addObserver(self, forKeyPath: "name", options: .Old, context: &KVOContext)
     employee.addObserver(self, forKeyPath: "raise", options: .Old, context: &KVOContext)
   }
   
-  func stopObservingEmployee(employee: Employee) {
+  func stopObservingEmployee(_ employee: Employee) {
     employee.removeObserver(self, forKeyPath: "name", context: &KVOContext)
     employee.removeObserver(self, forKeyPath: "raise", context: &KVOContext)
   }

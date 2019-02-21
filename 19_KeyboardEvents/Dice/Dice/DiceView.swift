@@ -28,33 +28,32 @@ class DiceView: NSView {
     }
   }
   
-  override func drawRect(dirtyRect: NSRect) {
-    let backgroundColor = highlighted ? NSColor.grayColor() : NSColor.lightGrayColor()
+    override func draw(_ dirtyRect: NSRect) {
+        let backgroundColor = highlighted ? NSColor.gray : NSColor.lightGray
     backgroundColor.set()
-    NSBezierPath.fillRect(bounds)
-    
-    drawDieWithSize(bounds.size)
+        NSBezierPath.fill(bounds)
+        drawDieWithSize(size: bounds.size)
   }
   
   override func viewDidMoveToWindow() {
     window?.acceptsMouseMovedEvents = true
     
-    let options: NSTrackingAreaOptions = (NSTrackingAreaOptions.MouseEnteredAndExited)
-      .union(NSTrackingAreaOptions.ActiveAlways)
-      .union(NSTrackingAreaOptions.InVisibleRect)
+    let options: NSTrackingAreaOptions = (NSTrackingAreaOptions.mouseEnteredAndExited)
+        .union(NSTrackingAreaOptions.activeAlways)
+        .union(NSTrackingAreaOptions.inVisibleRect)
     let trackingArea = NSTrackingArea(rect: NSRect(), options: options, owner: self, userInfo: nil)
     addTrackingArea(trackingArea)
   }
   
   override func resetCursorRects() {
-    let cursor = NSCursor.pointingHandCursor()
+    let cursor = NSCursor.pointingHand()
     addCursorRect(bounds, cursor: cursor)
     cursor.setOnMouseEntered(true)
   }
   
   func drawDieWithSize(size: NSSize) {
     if let intValue = intValue {
-      let (edgeLength, dieFrame) = metricsForSize(size)
+        let (edgeLength, dieFrame) = metricsForSize(size: size)
       
       // Rounded border
       NSGraphicsContext.saveGraphicsState()
@@ -65,7 +64,7 @@ class DiceView: NSView {
       shadow.set()
       
       let cornerRadius = edgeLength / 5.0
-      NSColor.whiteColor().set()
+        NSColor.white.set()
       NSBezierPath(roundedRect: dieFrame, xRadius: cornerRadius, yRadius: cornerRadius).fill()
       
       NSGraphicsContext.restoreGraphicsState()
@@ -75,28 +74,28 @@ class DiceView: NSView {
       let dotRadius = edgeLength / 12.0
       let dotFrame = dieFrame.insetBy(dx: dotRadius * 2.5, dy: dotRadius * 2.5)
       
-      NSColor.blackColor().set()
+        NSColor.black.set()
       
       // Nested function to make drawing dots cleaner.
-      func drawDot(u: CGFloat, _ v: CGFloat) {
+      func drawDot(_ u: CGFloat, _ v: CGFloat) {
         let dotOrigin = NSPoint(x: dotFrame.minX + u * dotFrame.width,
                                 y: dotFrame.minY + v * dotFrame.height)
         let dotRect = NSRect(origin: dotOrigin, size: NSSize(width: 0, height: 0))
           .insetBy(dx: -dotRadius, dy: -dotRadius)
-        NSBezierPath(ovalInRect: dotRect).fill()
+        NSBezierPath(ovalIn: dotRect).fill()
       }
       
       // If intValue is in range...
-      if (1...6).indexOf(intValue) != nil {
+      if (1...6).firstIndex(of: intValue) != nil {
         // Draw the dots:
-        if [1, 3, 5].indexOf(intValue) != nil {
+        if [1, 3, 5].firstIndex(of: intValue) != nil {
           drawDot(0.5, 0.5) // Center dot
         }
-        if (2...6).indexOf(intValue) != nil {
+        if (2...6).firstIndex(of: intValue) != nil {
           drawDot(0, 1) // Upper left
           drawDot(1, 0) // Lower right
         }
-        if (4...6).indexOf(intValue) != nil {
+        if (4...6).firstIndex(of: intValue) != nil {
           drawDot(1, 1) // Upper right
           drawDot(0, 0) // Lower left
         }
@@ -129,16 +128,16 @@ class DiceView: NSView {
   
   // MARK: - Mouse Events
   
-  override func mouseDown(theEvent: NSEvent) {
+    override func mouseDown(with theEvent: NSEvent) {
     Swift.print("Mouse down")
     
-    let dieFrame = metricsForSize(bounds.size).dieFrame
-    let pointInView = convertPoint(theEvent.locationInWindow, fromView: nil)
+        let dieFrame = metricsForSize(size: bounds.size).dieFrame
+        let pointInView = convert(theEvent.locationInWindow, from: nil)
     
     pressed = dieFrame.contains(pointInView)
   }
   
-  override func mouseUp(theEvent: NSEvent) {
+    override func mouseUp(with theEvent: NSEvent) {
     Swift.print("Mouse up. Clicked: \(theEvent.clickCount)")
     
     if theEvent.clickCount == 2 {
@@ -148,15 +147,15 @@ class DiceView: NSView {
     pressed = false
   }
   
-  override func mouseDragged(theEvent: NSEvent) {
+    override func mouseDragged(with theEvent: NSEvent) {
     Swift.print("Mouse dragged. Mouse location: \(theEvent.locationInWindow)")
   }
   
-  override func mouseEntered(theEvent: NSEvent) {
+    override func mouseEntered(with theEvent: NSEvent) {
     highlighted = true
   }
   
-  override func mouseExited(theEvent: NSEvent) {
+    override func mouseExited(with theEvent: NSEvent) {
     highlighted = false
   }
   
@@ -179,30 +178,30 @@ class DiceView: NSView {
   }
 
   override func drawFocusRingMask() {
-    NSBezierPath.fillRect(bounds)
+    NSBezierPath.fill(bounds)
   }
   
   // MARK: - Keyboard Events
   
-  override func keyDown(theEvent: NSEvent) {
+    override func keyDown(with theEvent: NSEvent) {
     interpretKeyEvents([theEvent])
   }
   
-  override func insertText(insertString: AnyObject) {
+    override func insertText(_ insertString: Any) {
     if let str = insertString as? String {
       if let num = Int.init(str) {
-        if (1...6).indexOf(num) != nil {
+        if (1...6).firstIndex(of: num) != nil {
           intValue = num
         }
       }
     }
   }
   
-  override func insertTab(sender: AnyObject?) {
+    override func insertTab(_ sender: Any?) {
     window?.selectNextKeyView(sender)
   }
   
-  override func insertBacktab(sender: AnyObject?) {
+    override func insertBacktab(_ sender: Any?) {
     window?.selectPreviousKeyView(sender)
   }
 }

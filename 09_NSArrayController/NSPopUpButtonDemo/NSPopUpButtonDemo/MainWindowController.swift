@@ -9,16 +9,15 @@
 import Cocoa
 
 class MainWindowController: NSWindowController {
-  
-  dynamic var personArray = [Person]()
-  dynamic var personSelected: Person? {
+    @objc dynamic var personArray = [Person]()
+    @objc dynamic var personSelected: Person? {
     didSet {
       if let person = personSelected {
         personDescription = "\(person.name) is \(person.age) years old."
       }
     }
   }
-  dynamic var personDescription = ""
+  @objc dynamic var personDescription = ""
   
   override var windowNibName: String? {
     return "MainWindowController"

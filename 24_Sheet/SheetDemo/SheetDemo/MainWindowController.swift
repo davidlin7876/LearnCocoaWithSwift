@@ -20,7 +20,7 @@ class MainWindowController: NSWindowController {
   
   // MARK: - Action
   
-  @IBAction func addPerson(sender: NSButton) {
+  @IBAction func addPerson(_ sender: NSButton) {
     if addPersonWindowController == nil {
       addPersonWindowController = AddPersonWindowController()
     }
@@ -33,7 +33,7 @@ class MainWindowController: NSWindowController {
   
   // MARK: - Helper
   
-  func addNewPerson(response: NSModalResponse) {
+  func addNewPerson(_ response: NSModalResponse) {
     if response == NSModalResponseOK {
       if let description = addPersonWindowController?.person.description {
         if textView.string != nil {
